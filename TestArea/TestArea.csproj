@@ -28,6 +28,10 @@
 		<PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\..\GuilRender\GuilRender\GuilRender.csproj" />
+	  <ProjectReference Include="..\..\GuilUI\InputManager\InputManager.csproj" />
+	</ItemGroup>
+	<ItemGroup>
 		<None Update="Content\Textures\mg.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

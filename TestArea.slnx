@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="../GuilRender/GuilRender/GuilRender.csproj" />
+  <Project Path="../GuilUI/InputManager/InputManager.csproj" />
   <Project Path="TestArea/TestArea.csproj" />
 </Solution>
