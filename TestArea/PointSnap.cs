@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Guilred.Input;
@@ -9,13 +10,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TestArea;
 
-public class TestTemplate : Game {
+public class PointSnap : Game {
     private readonly GraphicsDeviceManager _graphics;
     private GuilBatch _guilBatch = null!;
     private readonly InputManager _input;
     private readonly Dictionary<string, Texture2D> _textures = [];
     private Vector2 _screenSize => new(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
-    public TestTemplate() {
+    public PointSnap() {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -33,7 +34,7 @@ public class TestTemplate : Game {
             _textures[new FileInfo(png).Name] = Texture2D.FromFile(GraphicsDevice, png);
         }
     }
-
+    private readonly List<Vector2> _points = [];
     private bool _firstInit = true;
     protected override void Update(GameTime gameTime) {
         if (_input.KeyTapped(Keys.Escape))
@@ -41,7 +42,12 @@ public class TestTemplate : Game {
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _input.Update(dt);
         if (_input.KeyTappedAndHeld(Keys.Tab) || _firstInit && !(_firstInit = false)) {
-
+            _points.Clear();
+            var screenCenter = _screenSize / 2;
+            for (int i = 0; i < 10; i++) {
+                var rng = Random.Shared;
+                _points.Add(screenCenter + new Vector2(rng.Next(-200, 200), rng.Next(-200, 200)));
+            }
         }
 
         base.Update(gameTime);
@@ -55,8 +61,36 @@ public class TestTemplate : Game {
 
         _guilBatch.Begin();
 
+        var snapTol = 25;
+        foreach (var point in _points) {
+            _guilBatch.FillCircle(point, Color.Red, 5);
+            _guilBatch.BorderCircle(point, Color.Red, snapTol, 3);
+        }
+        _guilBatch.FillCircle(Snap(_input.VCMousePos, _points, snapTol), Color.Green, 5);
+
         _guilBatch.End();
 
         base.Draw(gameTime);
+    }
+    public static Vector2 Snap(Vector2 value, IReadOnlyList<Vector2> snapPoints, float tolerance) {
+        if (snapPoints == null || snapPoints.Count == 0)
+            return value;
+
+        if (tolerance < 0f)
+            throw new ArgumentOutOfRangeException(nameof(tolerance), "Tolerance must be non-negative.");
+
+        Vector2 nearest = snapPoints[0];
+        float nearestDistanceSq = Vector2.DistanceSquared(value, snapPoints[0]);
+
+        for (int i = 1; i < snapPoints.Count; i++) {
+            float distanceSq = Vector2.DistanceSquared(value, snapPoints[i]);
+
+            if (distanceSq < nearestDistanceSq) {
+                nearestDistanceSq = distanceSq;
+                nearest = snapPoints[i];
+            }
+        }
+
+        return nearestDistanceSq <= tolerance * tolerance ? nearest : value;
     }
 }

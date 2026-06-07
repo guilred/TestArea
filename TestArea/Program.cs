@@ -1,2 +1,2 @@
-﻿using var game = new TestArea.VertsOBB();
+﻿using var game = new TestArea.PointSnap();
 game.Run();
