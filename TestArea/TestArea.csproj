@@ -32,8 +32,14 @@
 	  <ProjectReference Include="..\..\GuilUI\InputManager\InputManager.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Update="Content\Textures\circle.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 		<None Update="Content\Textures\mg.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Content\Textures\star.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 	<Target Name="RestoreDotnetTools" BeforeTargets="CollectPackageReferences">

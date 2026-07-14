@@ -25,8 +25,15 @@ public class PointSnap : Game {
         (_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight) = (1280, 720);
         _graphics.ApplyChanges();
         _input = new InputManager(Window);
+        Window.ClientSizeChanged += OnWindowSizeChanged;
     }
+    
 
+    private void OnWindowSizeChanged(object? sender, EventArgs e) {
+        _graphics.PreferredBackBufferWidth  = Window.ClientBounds.Width;
+        _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+        _graphics.ApplyChanges();
+    }
     protected override void LoadContent() {
         _guilBatch = new GuilBatch(GraphicsDevice);
         var pngs = Directory.EnumerateDirectories("Content/Textures").Where(png => png.EndsWith(".png"));
@@ -37,7 +44,7 @@ public class PointSnap : Game {
     private readonly List<Vector2> _points = [];
     private bool _firstInit = true;
     protected override void Update(GameTime gameTime) {
-        if (_input.KeyTapped(Keys.Escape))
+        if (_input.KeyTapped(Keys.F1))
             Exit();
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _input.Update(dt);

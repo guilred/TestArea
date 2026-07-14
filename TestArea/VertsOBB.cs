@@ -40,7 +40,7 @@ public class VertsOBB : Game {
     private readonly List<Vector2> _verts = [];
     private bool _firstInit = true;
     protected override void Update(GameTime gameTime) {
-        if (_input.KeyTapped(Keys.Escape))
+        if (_input.KeyTapped(Keys.F1))
             Exit();
         var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _input.Update(dt);
@@ -56,6 +56,7 @@ public class VertsOBB : Game {
             //_verts.Add(screenCenter + new Vector2(1, 1) * 200);
             //_verts.Add(screenCenter + new Vector2(-1, 1) * 200);
         }
+        Console.WriteLine("hi");
 
         base.Update(gameTime);
     }

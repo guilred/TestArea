@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Guilred.Input;
 using Guilred.Rendering;
 using Microsoft.Xna.Framework;
@@ -9,13 +11,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TestArea;
 
-public class TestTemplate : Game {
+public class Dummy : Game {
     private readonly GraphicsDeviceManager _graphics;
     private GuilBatch _guilBatch = null!;
     private readonly InputManager _input;
     private readonly Dictionary<string, Texture2D> _textures = [];
     private Vector2 _screenSize => new(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
-    public TestTemplate() {
+    public Dummy() {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -28,9 +30,9 @@ public class TestTemplate : Game {
 
     protected override void LoadContent() {
         _guilBatch = new GuilBatch(GraphicsDevice);
-        var pngs = Directory.EnumerateDirectories("Content/Textures").Where(png => png.EndsWith(".png"));
+        var pngs = Directory.EnumerateFiles(AppContext.BaseDirectory + "Content/Textures").Where(png => png.EndsWith(".png"));
         foreach (var png in pngs) {
-            _textures[new FileInfo(png).Name] = Texture2D.FromFile(GraphicsDevice, png);
+            _textures[new FileInfo(png).Name.Replace(".png", null)] = Texture2D.FromFile(GraphicsDevice, png);
         }
     }
 
@@ -52,8 +54,13 @@ public class TestTemplate : Game {
         var time = gameTime.TotalGameTime.TotalSeconds;
         var angle = (float)(time % double.Tau);
         var wave = (float)double.Pow(double.Sin(time), 0);
+        var mpos = _input.CMousePos;
 
-        _guilBatch.Begin();
+        _guilBatch.Begin(blendState: BlendState.Additive);
+
+        _guilBatch.DrawTexture(_textures["star"], new Rectangle(10, 10, 512, 512), Color.White);
+        _guilBatch.DrawTexture(_textures["star"], new Rectangle(40, 10, 512, 512), Color.White);
+        _guilBatch.DrawTexture(_textures["star"], new Rectangle(mpos.X, mpos.Y, 512, 512), Color.White);
 
         _guilBatch.End();
 

@@ -9,13 +9,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TestArea;
 
-public class TestTemplate : Game {
+public class OBBVsCirc : Game {
     private readonly GraphicsDeviceManager _graphics;
     private GuilBatch _guilBatch = null!;
     private readonly InputManager _input;
     private readonly Dictionary<string, Texture2D> _textures = [];
     private Vector2 _screenSize => new(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
-    public TestTemplate() {
+    public OBBVsCirc() {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
